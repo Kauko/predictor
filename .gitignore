@@ -1,4 +1,6 @@
+.idea/
 Procfile
+*.iml
 /target
 /lib
 /classes
