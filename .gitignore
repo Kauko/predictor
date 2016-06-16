@@ -1,5 +1,4 @@
 .idea/
-Procfile
 *.iml
 /target
 /lib
