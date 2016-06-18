@@ -1,7 +1,10 @@
 (ns predictor.templates
   (:require [hiccup.page :as page]
+    [predictor.carry-rum :as carry-rum]
             #_[rum.core :as rum]
-            #_[predictor.views.app :refer [view]]))
+            [predictor.views.app :refer [view]]
+            [predictor.view-models.app :refer [view-model]]
+            [predictor.models.app :refer [-initial-model]]))
 
 (defn- boilerplate-js [token context]
   (let [context (when context (str "var context = \"" context "\";"))
@@ -60,7 +63,8 @@
      (boilerplate-js csrf-token servlet-context)]
     [:script {:type "text/javascript", :src "/js/app.js"}]]])
 
-(def main-page (partial page-template (fn [{:keys [data]}] [:div#app #_(rum/render-html (view data))])))
+(def main-page (partial page-template (fn [{:keys [data]}] [:div#app (carry-rum/render-html
+                                                                       view (view-model data))])))
 
 (defn error [{:keys [status title message]}]
   (page/html5

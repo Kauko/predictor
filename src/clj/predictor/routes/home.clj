@@ -7,7 +7,7 @@
             [predictor.models.app :as model]))
 
 (defn home-page []
-  (layout/render templates/main-page {:element-opts {:data model/-initial-model}}))
+  (layout/render templates/main-page {:element-opts {:data (atom model/-initial-model)}}))
 
 (defn devcards []
   (layout/render templates/devcards))
