@@ -3,10 +3,11 @@
             [compojure.core :refer [defroutes GET]]
             [ring.util.http-response :as response]
             [clojure.java.io :as io]
-            [predictor.templates :as templates]))
+            [predictor.templates :as templates]
+            [predictor.models.app :as model]))
 
 (defn home-page []
-  (layout/render templates/main-page {:element-opts {:data nil}}))
+  (layout/render templates/main-page {:element-opts {:data model/model}}))
 
 (defn devcards []
   (layout/render templates/devcards))
