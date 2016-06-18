@@ -18,3 +18,5 @@ profiles.clj
 .lein-plugins/
 .lein-failures
 figwheel_server.log
+
+resources/public/css/screen.css
