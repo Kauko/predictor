@@ -17,4 +17,4 @@ profiles.clj
 .lein-repl-history
 .lein-plugins/
 .lein-failures
-
+figwheel_server.log
