@@ -1,3 +1,3 @@
 (ns predictor.models.app)
 
-(def model (atom 0))
+(def -initial-model {:val 0})

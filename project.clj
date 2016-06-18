@@ -29,7 +29,8 @@
                  [luminus-immutant "0.2.0"]
 
                  [rum "0.9.0"]
-                 [carry "0.4.0"]]
+                 [carry "0.4.0"]
+                 [org.clojure/core.match "0.3.0-alpha4"]]
 
   :min-lein-version "2.0.0"
 

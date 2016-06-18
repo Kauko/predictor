@@ -1,7 +1,7 @@
 (ns predictor.templates
   (:require [hiccup.page :as page]
-            [rum.core :as rum]
-            [predictor.views.app :refer [app]]))
+            #_[rum.core :as rum]
+            #_[predictor.views.app :refer [view]]))
 
 (defn- boilerplate-js [token context]
   (let [context (when context (str "var context = \"" context "\";"))
@@ -60,7 +60,7 @@
      (boilerplate-js csrf-token servlet-context)]
     [:script {:type "text/javascript", :src "/js/app.js"}]]])
 
-(def main-page (partial page-template (fn [{:keys [data]}] [:div#app (rum/render-html (app data))])))
+(def main-page (partial page-template (fn [{:keys [data]}] [:div#app #_(rum/render-html (view data))])))
 
 (defn error [{:keys [status title message]}]
   (page/html5
