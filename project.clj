@@ -1,7 +1,7 @@
 (defproject predictor "0.1.0-SNAPSHOT"
 
-  :description "FIXME: write description"
-  :url "http://example.com/FIXME"
+  :description "Predict match outcomes"
+  :url "https://github.com/Kauko/predictor"
 
   :dependencies [[luminus-log4j "0.1.3"]
                  [metosin/compojure-api "1.1.2"]

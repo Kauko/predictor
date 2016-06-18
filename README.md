@@ -1,8 +1,8 @@
-# predictor
+# Predictor
 
-generated using Luminus version "2.9.10.69"
+Generated using Luminus version 2.9.10.69
 
-FIXME
+Built using Rum+Carry. Uses server-side rendering with Hiccup templates.
 
 ## Prerequisites
 
@@ -14,8 +14,22 @@ You will need [Leiningen][1] 2.0 or above installed.
 
 To start a web server for the application, run:
 
-    lein run
+    lein repl
+
+Start figwheel
+
+    lein figwheel
+
+Start autoloading css changes
+
+    lein auto sassc once
+
+
 
 ## License
 
-Copyright © 2016 FIXME
+The MIT License (MIT)
+
+Copyright (c) 2016 @TeemuKaukoranta
+
+See LICENSE file
