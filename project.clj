@@ -68,6 +68,7 @@
       :output-to "target/cljsbuild/public/js/app.js"
       :output-dir "target/cljsbuild/public/js/out"
       :optimizations :none
+      :recompile-dependents false
       :source-map true
       :pretty-print true}}
     :test
@@ -91,6 +92,7 @@
   :figwheel
   {:http-server-root "public"
    :nrepl-port 7002
+   :reload-clj-files false
    :css-dirs ["resources/public/css"]
    :nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
   
