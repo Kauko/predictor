@@ -8,5 +8,6 @@
         app-view (view app-view-model dispatch-signal)]
     [app-view-model app-view]))
 
-(defn render-html [component view-model-atom]
-  (rum/render-html (component view-model-atom (fn fake-dispatch [& _]))))
+#?(:clj
+  (defn render-html [component view-model-atom]
+   (rum/render-html (component view-model-atom (fn fake-dispatch [& _])))))
