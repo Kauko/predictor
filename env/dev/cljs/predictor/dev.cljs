@@ -7,6 +7,7 @@
             [carry-logging.core :as logging]
             [carry-persistence.core :as persistence]
             [hodgepodge.core :as hp]
+            [taoensso.timbre :as log]
             [predictor.reconcilers.app :as reconciler]
             [predictor.controls.app :as control]
             [predictor.models.app :as model]))
@@ -20,10 +21,19 @@
 
 (devtools/install!)
 
+(def logging-config
+  {:level :debug  ; e/o #{:trace :debug :info :warn :error :fatal :report}
+   :ns-whitelist  [] #_["my-app.foo-ns"]
+   :ns-blacklist  [] #_["taoensso.*"]
+   :middleware [] ; (fns [data]) -> ?data, applied left->right
+   })
+
+#_(log/merge-config! logging-config)
+
 (def spec (-> {:initial-model (model/new-model)
                :control       (control/-new-control)
                :reconcile     reconciler/-reconcile}
-              (logging/add)))
+              (logging/add "[CARRY] ")))
 
 #_(debugger/add hp/local-storage :carry-debugger-model)
 #_(history/add history/new-hash-history)

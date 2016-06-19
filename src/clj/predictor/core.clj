@@ -4,7 +4,7 @@
             [luminus.http-server :as http]
             [predictor.config :refer [env]]
             [clojure.tools.cli :refer [parse-opts]]
-            [clojure.tools.logging :as log]
+            [taoensso.timbre :as log]
             [luminus.logger :as logger]
             [mount.core :as mount])
   (:gen-class))
@@ -32,7 +32,7 @@
                 (when repl-server
                   (repl/stop repl-server)))
 
-(mount/defstate log
+#_(mount/defstate log
                 :start (logger/init (:log-config env)))
 
 

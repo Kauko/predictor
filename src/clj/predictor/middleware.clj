@@ -1,6 +1,6 @@
 (ns predictor.middleware
   (:require [predictor.env :refer [defaults]]
-            [clojure.tools.logging :as log]
+            [taoensso.timbre :as log]
             [predictor.layout :refer [*app-context* error-page]]
             [ring.middleware.anti-forgery :refer [wrap-anti-forgery]]
             [ring.middleware.webjars :refer [wrap-webjars]]

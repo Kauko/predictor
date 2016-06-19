@@ -34,7 +34,8 @@
                  [carry-persistence "0.3.0"]
                  [hodgepodge "0.1.3"]
                  [org.clojure/core.match "0.3.0-alpha4"]
-                 [funcool/lentes "1.0.1"]]
+                 [funcool/lentes "1.0.1"]
+                 [com.taoensso/timbre "4.4.0"]]
 
   :min-lein-version "2.0.0"
 
