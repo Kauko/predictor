@@ -2,7 +2,7 @@
   (:require [predictor.core :as core]
             [devtools.core :as devtools]
             [figwheel.client :as figwheel :include-macros true]
-            [carry-debugger.core :as debugger]
+            [predictor.carry-rum-debugger :as debugger]
             [carry-history.core :as history]
             [carry-logging.core :as logging]
             [carry-persistence.core :as persistence]
@@ -33,9 +33,8 @@
 (def spec (-> {:initial-model (model/new-model)
                :control       (control/-new-control)
                :reconcile     reconciler/-reconcile}
+              (debugger/add hp/local-storage :carry-debugger-model)
               (logging/add "[CARRY] ")))
-
-#_(debugger/add hp/local-storage :carry-debugger-model)
 #_(history/add history/new-hash-history)
 #_(persistence/add hp/local-storage :carry-persistence-model)
 

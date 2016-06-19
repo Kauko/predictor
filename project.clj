@@ -35,7 +35,8 @@
                  [hodgepodge "0.1.3"]
                  [org.clojure/core.match "0.3.0-alpha4"]
                  [funcool/lentes "1.0.1"]
-                 [com.taoensso/timbre "4.4.0"]]
+                 [com.taoensso/timbre "4.4.0"]
+                 [com.rpl/specter "0.11.2"]]
 
   :min-lein-version "2.0.0"
 
@@ -125,7 +126,11 @@
                                     [com.cemerick/piggieback "0.2.2-SNAPSHOT"]
 
                                     [carry-debugger "0.5.0"]
-                                    [carry-logging "0.1.0"]]
+                                    [carry-logging "0.1.0"]
+                                    [prismatic/schema "1.1.2"]
+                                    [carry-schema "0.3.0"]
+                                    [cljsjs/jquery-ui "1.11.4-0"]
+                                    [cljsjs/filesaverjs "1.1.20151003-0"]]
                    :plugins        [[com.jakemccrary/lein-test-refresh "0.14.0"]
                                     [lein-doo "0.1.6"]
                                     [lein-figwheel "0.5.4-3"]

@@ -6,13 +6,15 @@
             [predictor.ajax :refer [load-interceptors!]]
             [ajax.core :refer [GET POST]]
             [predictor.views.app :as app]
-            [rum.core :as rum]
+            [rum.core :as rum :include-macros true]
             [predictor.view-models.app :as view-model]
             [predictor.carry-rum :as carry-rum]
             [carry.core :as carry]
             [predictor.reconcilers.app :as reconciler]
             [predictor.controls.app :as control]
-            [predictor.models.app :as model])
+            [predictor.models.app :as model]
+            [taoensso.timbre :as log]
+            [predictor.carry-rum-debugger :as debugger])
   (:import goog.History))
 
 
@@ -42,25 +44,39 @@
 
 (defonce app nil)
 
-(defn mount! [component]
-  (rum/mount component (js/document.getElementById "app")))
+(rum/defc root [application debugger]
+          [:div
+           application
+           debugger])
 
-(defn main [spec]
-  (let [app (carry/app spec)
-        [app-view-model app-view] (carry-rum/connect app view-model/view-model app/view)]
-    (mount! app-view)
+(defn mount!
+  [app debugger]
+  (let [el (js/document.getElementById "app")]
+    (if debugger
+     (rum/mount (root app debugger) el)
+     (rum/mount app el))))
+
+(defn start-app [app]
+  (let [[app-view-model app-view] (carry-rum/connect app view-model/view-model app/view)
+        [_ debugger-view] (when (debugger/debugger-added? app) (debugger/connect app))]
+    (mount! app-view debugger-view)
     ((:dispatch-signal app) :on-start)
     (assoc app :view-model app-view-model)))
+
+(defn build-app [spec]
+  (carry/app spec))
 
 (defn init! [spec]
   (load-interceptors!)
   #_(hook-browser-navigation!)
-  (set! app (main spec)))
+  (set! app (start-app (build-app spec))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;; Figwheel stuff
 (defn before-jsload []
   ((:dispatch-signal app) :on-stop))
 
 (defn on-jsload []
-  (mount! (app/view (view-model/view-model (:model app)) (:dispatch-signal app)))
-  #_(. js/console clear))
+  (let [])
+  (start-app app)
+  (. js/console clear)
+  (log/info "Reloaded!"))
