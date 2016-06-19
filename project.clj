@@ -30,6 +30,9 @@
 
                  [rum "0.9.0"]
                  [carry "0.4.0"]
+                 [carry-history "0.3.0"]
+                 [carry-persistence "0.3.0"]
+                 [hodgepodge "0.1.3"]
                  [org.clojure/core.match "0.3.0-alpha4"]
                  [funcool/lentes "1.0.1"]]
 
@@ -50,11 +53,11 @@
    [{:src "resources/scss/screen.scss"
      :output-to "resources/public/css/screen.css"
      :style "nested"
-     :import-path "resources/scss"}] 
-  
+     :import-path "resources/scss"}]
+
    :auto
-   {"sassc" {:file-pattern #"\.(scss|sass)$" :paths ["resources/scss"]}} 
-  
+   {"sassc" {:file-pattern #"\.(scss|sass)$" :paths ["resources/scss"]}}
+
   :hooks [leiningen.sassc]
   :clean-targets ^{:protect false}
   [:target-path [:cljsbuild :builds :app :compiler :output-dir] [:cljsbuild :builds :app :compiler :output-to]]
@@ -90,18 +93,18 @@
       :pretty-print false
       :closure-warnings
       {:externs-validation :off :non-standard-jsdoc :off}}}}}
-  
+
   :figwheel
   {:http-server-root "public"
    :nrepl-port 7002
    :reload-clj-files false
    :css-dirs ["resources/public/css"]
    :nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
-  
+
 
   :profiles
   {:uberjar {:omit-source true
-             
+
              :prep-tasks ["compile" ["cljsbuild" "once" "min"]]
              :aot :all
              :uberjar-name "predictor.jar"
@@ -118,12 +121,15 @@
                                  [doo "0.1.6"]
                                  [binaryage/devtools "0.7.0"]
                                  [figwheel-sidecar "0.5.4-3"]
-                                 [com.cemerick/piggieback "0.2.2-SNAPSHOT"]]
+                                 [com.cemerick/piggieback "0.2.2-SNAPSHOT"]
+
+                                 [carry-debugger "0.5.0"]
+                                 [carry-logging "0.1.0"]]
                   :plugins      [[com.jakemccrary/lein-test-refresh "0.14.0"]
                                  [lein-doo "0.1.6"]
                                  [lein-figwheel "0.5.4-3"]
                                  [org.clojure/clojurescript "1.9.36"]]
-                  
+
                   :doo {:build "test"}
                   :source-paths ["env/dev/clj" "test/clj"]
                   :resource-paths ["env/dev/resources"]

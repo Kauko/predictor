@@ -42,25 +42,21 @@
 
 (defonce app nil)
 
-(def spec {:initial-model model/-initial-model
-           :control       (control/-new-control)
-           :reconcile     reconciler/-reconcile})
-
 (defn mount! [component]
   (rum/mount component (js/document.getElementById "app")))
 
-(defn main []
+(defn main [spec]
   (let [app (carry/app spec)
         [app-view-model app-view] (carry-rum/connect app view-model/view-model app/view)]
     (mount! app-view)
     ((:dispatch-signal app) :on-start)
     (assoc app :view-model app-view-model)))
 
-(defn init! []
+(defn init! [spec]
   (js/console.log "Init!")
   (load-interceptors!)
   #_(hook-browser-navigation!)
-  (set! app (main)))
+  (set! app (main spec)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;; Figwheel stuff
 (defn before-jsload []
