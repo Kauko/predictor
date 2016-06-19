@@ -1,7 +1,6 @@
 (ns predictor.templates
   (:require [hiccup.page :as page]
     [predictor.carry-rum :as carry-rum]
-            #_[rum.core :as rum]
             [predictor.views.app :refer [view]]
             [predictor.view-models.app :refer [view-model]]
             [predictor.models.app :refer [-initial-model]]))
