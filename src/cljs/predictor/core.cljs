@@ -53,7 +53,6 @@
     (assoc app :view-model app-view-model)))
 
 (defn init! [spec]
-  (js/console.log "Init!")
   (load-interceptors!)
   #_(hook-browser-navigation!)
   (set! app (main spec)))
