@@ -10,6 +10,6 @@
 (rum/defc view < rum/reactive
   [{:keys [counter] :as _view-model} dispatch]
   [:p
-   (str "#" (:val (rum/react counter))) " "
-   [:button {:on-click #(dispatch :on-increment)} "Inc"] " "
+   (str "#" (rum/react counter)) " "
+   [:button {:on-click #(dispatch :on-increment)} "+"] " "
    [:button {:on-click #(dispatch :on-decrement)} "-"] " "])

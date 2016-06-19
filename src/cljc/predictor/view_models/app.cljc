@@ -1,6 +1,8 @@
-(ns predictor.view-models.app)
+(ns predictor.view-models.app
+  (:require [lentes.core :as lentes]))
+
+(def value-lens (lentes/key :val))
 
 (defn view-model
   [model]
-  {:counter model}
-  #_{:counter (atom (str "#" (:val @model)))})
+  {:counter (lentes/focus-atom value-lens model)})
