@@ -346,29 +346,29 @@
         highlighted-signal-id (lentes/focus-atom (lentes/key :highlighted-signal-id) @debugger)]
     (-> (track-keys debugger
                     [:initial-model :replay-mode? :visible? :toggle-visibility-shortcut :action-events])
-        (assoc :signal-events @signal-events))))
+        (assoc :signal-events signal-events))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;; View
 (def ^:no-doc -color-replay "rgb(240, 240, 30)")
 (def ^:no-doc -style-menu-button {:margin        "5px 3px"
                                   :padding       4
-                                  :font-size     "inherit"
-                                  :font-family   "inherit"
-                                  :font-weight   "bold"
+                                  :fontSize    "inherit"
+                                  :fontFamily   "inherit"
+                                  :fontWeight   "bold"
                                   :color         "white"
                                   :cursor        "pointer"
-                                  :border-radius "3px"
+                                  :borderRadius "3px"
                                   :border        0
                                   :background    "none"})
 
-#_(rum/defc -menu-button < rum/static
+(rum/defc -menu-button < rum/static
           [style caption on-click title]
           [:button {:style    (merge -style-menu-button style)
                     :title    title
                     :on-click on-click}
            caption])
 
-#_(rum/defc -menu-file-selector < rum/static
+(rum/defc -menu-file-selector < rum/static
           [caption on-load title]
           [:label {:style -style-menu-button
                    :title title}
@@ -385,20 +385,20 @@
                     ; hack to allow on-change be fired when the same file is selected twice in a row
                     :value     ""}]])
 
-#_(rum/defc -menu < rum/static
+(rum/defc -menu < rum/static
   [replay-mode? toggle-visibility-shortcut dispatch]
   [:div {:style {:text-align  "center"
                  :white-space "nowrap"
                  :overflow    "hidden"}}
-   [-menu-button {} "Clear" #(dispatch ::on-clear) "Clears debugger history"]
-   [-menu-button {} "Vacuum" #(dispatch ::on-vacuum) "Removes disabled actions and signals with no actions from history"]
-   [-menu-button {} "Reset" #(dispatch ::on-reset) "Removes all actions and signals resetting the model to initial state"]
-   [-menu-file-selector "Open" #(dispatch [::on-open %]) "Loads debugger session from file (without replaying)"]
-   [-menu-button {} "Save" #(dispatch ::on-save) "Saves current debugger session into file"]
-   [-menu-button (if replay-mode? {:color -color-replay} {:color "grey"}) "Replay⥀" #(dispatch ::on-toggle-replay-mode) "Replay current session before next app start?"]
-   [-menu-button {} "Hide" #(dispatch ::on-toggle-visibility) (str "Hides debugger view (" toggle-visibility-shortcut ")")]])
+   (-menu-button {} "Clear" #(dispatch ::on-clear) "Clears debugger history")
+   (-menu-button {} "Vacuum" #(dispatch ::on-vacuum) "Removes disabled actions and signals with no actions from history")
+   (-menu-button {} "Reset" #(dispatch ::on-reset) "Removes all actions and signals resetting the model to initial state")
+   (-menu-file-selector "Open" #(dispatch [::on-open %]) "Loads debugger session from file (without replaying)")
+   (-menu-button {} "Save" #(dispatch ::on-save) "Saves current debugger session into file")
+   (-menu-button (if replay-mode? {:color -color-replay} {:color "grey"}) "Replay⥀" #(dispatch ::on-toggle-replay-mode) "Replay current session before next app start?")
+   (-menu-button {} "Hide" #(dispatch ::on-toggle-visibility) (str "Hides debugger view (" toggle-visibility-shortcut ")"))])
 
-#_(rum/defc -actions-view < rum/static
+(rum/defc -actions-view < rum/static
   [action-events signal-id dispatch]
   [:div
    (for [{:keys [id action enabled? for-replay?]} (filter #(= (:signal-id %) signal-id)
@@ -429,7 +429,7 @@
                :title    "Print model state after this action"}
          "model"])])])
 
-#_(rum/defc -signal-view < rum/static
+(rum/defc -signal-view < rum/static
   [{:keys [id parent-id signal highlighted?] :as _signal-event} dispatch]
   [:div {:style         {:margin-top       8
                          :padding-left     4
@@ -446,23 +446,23 @@
      [:span (pr-str (first signal)) " " (clojure.string/join " " (map pr-str (rest signal)))]
      (pr-str signal))])
 
-#_(rum/defc -signals-view < rum/static
+(rum/defc -signals-view < rum/static
   [signal-events action-events dispatch]
   [:div
    (doall
      (for [signal-event signal-events]
        ^{:key (:id signal-event)}
        [:div {:style {:margin-left (* (:indent signal-event) 15)}}
-        [-signal-view signal-event dispatch]
-        [-actions-view action-events (:id signal-event) dispatch]]))])
+        (-signal-view signal-event dispatch)
+        (-actions-view action-events (:id signal-event) dispatch)]))])
 
-#_(rum/defc -initial-model-view < rum/static
+(rum/defc -initial-model-view < rum/static
   [initial-model]
   [:div {:style {:border-bottom "thin solid grey"}
          :title "Initial model"}
    [:div (pr-str initial-model)]])
 
-#_(rum/defc -resizable-div
+(rum/defc -resizable-div
   < {:did-mount (fn [this]
                   (.resizable (js/$ (-> this
                                         :rum/react-component
@@ -489,15 +489,15 @@
                        (.-scrollHeight (-> this
                                            :rum/react-component
                                            js/ReactDOM.findDOMNode)))))]
-  #_(rum/defc -autoscrollable-div
+  (rum/defc -autoscrollable-div
    < {:did-mount scroll
       :did-update scroll
       :will-update update-autoscroll
       }
    [_attrs & _body]
-    (into [:div attrs] body)))
+    (into [:div _attrs] _body)))
 
-#_(rum/defc -overlay < rum/static
+(rum/defc -overlay < rum/static
   [& body]
   (into [:div {:style {:position       "fixed"
                        :left           0
@@ -508,37 +508,36 @@
                        :pointer-events "none"}}]
         body))
 
-#_(rum/defc -view < rum/static rum/reactive
-  [{:keys [visible? toggle-visibility-shortcut replay-mode? initial-model signal-events action-events]}
+(rum/defc -view < rum/static rum/reactive
+  [{:keys [visible? toggle-visibility-shortcut replay-mode? initial-model signal-events action-events] :as _view-model}
    dispatch]
-  [-overlay
-   [-resizable-div {:style {:display          (if (rum/react visible?) "block" "none") ; using CSS instead of React in order to persist resized frame on toggling visibility
-                            :left             "70%"
-                            :width            "30%"
-                            :height           "100%"
-                            :pointer-events   "all"
 
-                            :background-color "#2A2F3A"
-                            :color            "white"
-                            :font-size        14
-                            :font-family      "sans-serif"
-                            :line-height      "1.4em"
-                            :font-weight      "300"}}
-    [-menu (rum/react replay-mode?) (rum/react toggle-visibility-shortcut) dispatch]
+  [:div
+   (-overlay
+     (-resizable-div {:style {:display          (if (rum/react visible?) "block" "none") ; using CSS instead of React in order to persist resized frame on toggling visibility
+                              :left             "70%"
+                              :width            "30%"
+                              :height           "100%"
+                              :pointer-events   "all"
 
-    [-autoscrollable-div
-     {:style {:position   "absolute"
-              :top        "2.5em"
-              :bottom     0
-              :left       0
-              :right      0
-              :overflow   "auto"
-              :border-top "thin solid grey"}}
-     [-initial-model-view (rum/react initial-model)]
-     [-signals-view (rum/react signal-events) (rum/react action-events) dispatch]]]])
+                              :background-color "#2A2F3A"
+                              :color            "white"
+                              :font-size        14
+                              :font-family      "sans-serif"
+                              :line-height      "1.4em"
+                              :font-weight      "300"}}
+                     (-menu (rum/react replay-mode?) (rum/react toggle-visibility-shortcut) dispatch)
 
-(rum/defc -view []
-  [:div "jee :)"])
+                     (-autoscrollable-div
+                       {:style {:position   "absolute"
+                                :top        "2.5em"
+                                :bottom     0
+                                :left       0
+                                :right      0
+                                :overflow   "auto"
+                                :border-top "thin solid grey"}}
+                       (-initial-model-view (rum/react initial-model))
+                       (-signals-view (rum/react signal-events) (rum/react action-events) dispatch))))])
 
 ;;;;;;;;;;;;;;;;;;;;;;;; Middleware
 (defn add

@@ -45,16 +45,14 @@
 (defonce app nil)
 
 (rum/defc root [application debugger]
-          [:div
+          [:div#root
            application
            debugger])
 
 (defn mount!
   [app debugger]
   (let [el (js/document.getElementById "app")]
-    (if debugger
-     (rum/mount (root app debugger) el)
-     (rum/mount app el))))
+    (rum/mount (root app debugger) el)))
 
 (defn start-app [app]
   (let [[app-view-model app-view] (carry-rum/connect app view-model/view-model app/view)

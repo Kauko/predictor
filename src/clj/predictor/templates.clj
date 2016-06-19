@@ -62,8 +62,10 @@
      (boilerplate-js csrf-token servlet-context)]
     [:script {:type "text/javascript", :src "/js/app.js"}]]])
 
-(def main-page (partial page-template (fn [{:keys [data]}] [:div#app (carry-rum/render-html
-                                                                       view (view-model data))])))
+(def main-page (partial page-template (fn [{:keys [data]}]
+                                        [:div#app
+                                         [:div#root
+                                          (carry-rum/render-html view (view-model data))]])))
 
 (defn error [{:keys [status title message]}]
   (page/html5

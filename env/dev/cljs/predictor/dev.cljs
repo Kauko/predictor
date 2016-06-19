@@ -33,8 +33,8 @@
 (def spec (-> {:initial-model (model/new-model)
                :control       (control/-new-control)
                :reconcile     reconciler/-reconcile}
-              (debugger/add hp/local-storage :carry-debugger-model)
               (logging/add "[CARRY] ")))
+#_(debugger/add hp/local-storage :carry-debugger-model)
 #_(history/add history/new-hash-history)
 #_(persistence/add hp/local-storage :carry-persistence-model)
 
