@@ -2,6 +2,7 @@
 *.iml
 *.DS_Store
 /target
+/out
 /lib
 /classes
 /checkouts
