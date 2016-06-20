@@ -15,7 +15,8 @@
   {:level :warn  ; e/o #{:trace :debug :info :warn :error :fatal :report}
    :ns-whitelist  [] #_["my-app.foo-ns"]
    :ns-blacklist  [] #_["taoensso.*"]
-   :middleware [] ; (fns [data]) -> ?data, applied left->right})
+   :middleware [] ; (fns [data]) -> ?data, applied left->right
+   })
 
 (log/merge-config! logging-config)
 
