@@ -1,5 +1,6 @@
 (ns predictor.test.handler
   (:require [clojure.test :refer :all]
+            [clj-fakes.core :as f]
             [ring.mock.request :refer :all]
             [predictor.handler :refer :all]))
 

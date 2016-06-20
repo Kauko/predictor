@@ -36,7 +36,8 @@
                  [org.clojure/core.match "0.3.0-alpha4"]
                  [funcool/lentes "1.0.1"]
                  [com.taoensso/timbre "4.4.0"]
-                 [com.rpl/specter "0.11.2"]]
+                 [com.rpl/specter "0.11.2"]
+                 [clj-fakes "0.4.0"]]
 
   :min-lein-version "2.0.0"
 
@@ -79,11 +80,11 @@
                     :source-map           true
                     :pretty-print         true}}
     :test
-    {:source-paths ["src/cljc" "src/cljs" "test/cljs"]
+    {:source-paths ["src/cljc" "src/cljs" "test/cljs" "test/cljc"]
      :compiler
                    {:output-to     "target/test.js"
-                    :main          "predictor.doo-runner"
-                    :optimizations :whitespace
+                    :main          "predictor.test.doo-runner"
+                    :optimizations :none
                     :pretty-print  true}}
     :min
     {:source-paths ["src/cljc" "src/cljs" "env/prod/cljs"]
@@ -137,7 +138,7 @@
                                     [org.clojure/clojurescript "1.9.36"]]
 
                    :doo            {:build "test"}
-                   :source-paths   ["env/dev/clj" "test/clj"]
+                   :source-paths   ["env/dev/clj" "test/clj" "test/cljc"]
                    :resource-paths ["env/dev/resources"]
                    :repl-options   {:init-ns user
                                     :init    (predictor.core/-main)}
