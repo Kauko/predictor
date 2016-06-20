@@ -1,8 +1,6 @@
 (ns predictor.view-models.app
-  (:require [lentes.core :as lentes]))
-
-(def value-lens (lentes/key :val))
+  (:require [rum.core :as rum]))
 
 (defn view-model
   [model]
-  {:counter (lentes/focus-atom value-lens model)})
+  {:counter (rum/derived-atom [model] ::counter :val)})

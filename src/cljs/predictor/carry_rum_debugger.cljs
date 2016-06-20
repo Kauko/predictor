@@ -10,7 +10,6 @@
             cljs.pprint
             [schema.core :as schema]
             [predictor.carry-rum :as carry-rum]
-            [lentes.core :as lentes]
             [rum.core :as rum :include-macros true]
             [taoensso.timbre :as log]
             [predictor.views.app :as app]
@@ -328,25 +327,43 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;; View model
 (defn track-keys
-  "Returns a map containing reactions to map entries specified by keys."
-  [map-ratom keyseq]
+  "Returns a map containing derived-atoms to map entries specified by keys."
+  [map-atom keyseq derived-key]
   (into {}
         (for [key keyseq]
-          [key (lentes/focus-atom (lentes/key key) map-ratom)])))
+          [key (rum/derived-atom
+                 [map-atom]
+                 (keyword (str (name derived-key) "_" (name key)))
+                 #(get % key))])))
 
 (defn ^:no-doc -signal-indent
+  [signal-id->parent-id id]
   [signal-id->parent-id id]
   (count (-signal-parent-ids signal-id->parent-id id)))
 
 (defn ^:no-doc -view-model
   [model]
-  (let [debugger (lentes/focus-atom (lentes/key ::debugger) model)
-        signal-events (lentes/focus-atom (lentes/key :signal-events) debugger)
-        signal-id->parent-id (lentes/focus-atom (lentes/getter -signal-id->parent-id) signal-events)
-        highlighted-signal-id (lentes/focus-atom (lentes/key :highlighted-signal-id) @debugger)]
+  (let [debugger (rum/derived-atom [model] ::_vm-debugger ::debugger)
+        signal-events (rum/derived-atom [debugger] ::_vm-signal-events :signal-events)
+        -signal-id->parent-id (rum/derived-atom [signal-events] ::_vm-signal-id->parent-id -signal-id->parent-id)
+        highlighted-signal-id (rum/derived-atom [debugger] ::_vm-hilighted-signal-id :highlighted-signal-id)
+        highlighted-signal-ids (rum/derived-atom [highlighted-signal-id -signal-id->parent-id]
+                                                 ::_vm-hilighted-signal-ids
+                                                 (fn [id parent-id]
+                                                   (into #{id}
+                                                         (-signal-parent-ids parent-id id))))]
     (-> (track-keys debugger
-                    [:initial-model :replay-mode? :visible? :toggle-visibility-shortcut :action-events])
-        (assoc :signal-events signal-events))))
+                    [:initial-model :replay-mode? :visible? :toggle-visibility-shortcut :action-events]
+                    ::vm-debugger-reactions)
+        (assoc :signal-events
+               (rum/derived-atom
+                 [highlighted-signal-ids -signal-id->parent-id signal-events]
+                 ::vm-signal-events
+                 (fn [hi-ids parent-id events]
+                   (mapv
+                     #(assoc % :highlighted? (contains? hi-ids (:id %))
+                               :indent (-signal-indent parent-id (:id %)))
+                     events)))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;; View
 (def ^:no-doc -color-replay "rgb(240, 240, 30)")
