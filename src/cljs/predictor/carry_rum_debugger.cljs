@@ -481,9 +481,7 @@
 
 (rum/defc -resizable-div
   < {:did-mount (fn [this]
-                  (.resizable (js/$ (-> this
-                                        :rum/react-component
-                                        js/ReactDOM.findDOMNode))
+                  (.resizable (js/$ (rum/dom-node this))
                               (clj->js {:grid    25
                                         :handles "n, e, s, w, ne, se, sw, nw"})))}
   [_attrs & _body]
@@ -491,26 +489,16 @@
 
 (let [autoscroll? (atom true)
       update-autoscroll (fn [this]
-                          (let [node (-> this
-                                         :rum/react-component
-                                         js/ReactDOM.findDOMNode)]
+                          (let [node (rum/dom-node this)]
                             ; expression value can be negative in Safari
                             (reset! autoscroll? (<= (- (.-scrollHeight node)
                                                        (+ (.-scrollTop node) (.-offsetHeight node)))
                                                     0))))
       scroll (fn [this]
                (when @autoscroll?
-                 (set! (.-scrollTop (-> this
-                                        :rum/react-component
-                                        js/ReactDOM.findDOMNode))
-                       (.-scrollHeight (-> this
-                                           :rum/react-component
-                                           js/ReactDOM.findDOMNode)))))]
+                 (set! (.-scrollTop (rum/dom-node this))
+                       (.-scrollHeight (rum/dom-node this)))))]
   (rum/defc -autoscrollable-div
-   < {:did-mount scroll
-      :did-update scroll
-      :will-update update-autoscroll
-      }
    [_attrs & _body]
     (into [:div _attrs] _body)))
 
